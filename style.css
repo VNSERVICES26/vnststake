@@ -1,0 +1,330 @@
+/* Base Styles */
+:root {
+  --primary-color: #001f3f;
+  --secondary-color: #ffb300;
+  --accent-color: #00d4ff;
+  --text-color: #ffffff;
+  --card-bg: rgba(0, 43, 92, 0.8);
+  --footer-bg: #001a35;
+  --hover-color: #ffa500;
+  --glass-effect: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --neon-glow: 0 0 10px rgba(0, 212, 255, 0.7);
+  --error-color: #ff4d4d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--primary-color), #004080);
+  color: var(--text-color);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Desktop Warning */
+.desktop-warning {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-color);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.warning-content {
+  max-width: 500px;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 1px solid var(--glass-border);
+}
+
+.warning-content h2 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+/* Main App Layout */
+#app-content {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 31, 63, 0.9);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  height: 40px;
+}
+
+.connect-btn {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.connect-btn:hover {
+  background: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Buttons */
+.btn {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn:hover {
+  background: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+/* Staking Info */
+.staking-info {
+  margin: 1rem 0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+
+.stat-card h3 {
+  font-size: 1rem;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  background: var(--footer-bg);
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.footer-links a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* Wallet Modal */
+.wallet-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  border: 1px solid var(--glass-border);
+}
+
+.wallet-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.wallet-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.wallet-buttons button:hover {
+  background: rgba(255, 179, 0, 0.1);
+  border-color: var(--secondary-color);
+}
+
+.wallet-buttons button img {
+  width: 24px;
+  height: 24px;
+}
+
+.or-text {
+  text-align: center;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.or-text::before,
+.or-text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+.or-text::before {
+  left: 0;
+}
+
+.or-text::after {
+  right: 0;
+}
+
+.small-text {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #app-content {
+    display: flex;
+  }
+  
+  .desktop-warning {
+    display: none;
+  }
+  
+  .navbar {
+    padding: 1rem;
+  }
+  
+  main {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-warning {
+    display: flex;
+  }
+}
