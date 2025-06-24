@@ -5,139 +5,149 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VNST Staking Platform</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- Mobile Warning for Desktop Users -->
-  <div id="desktop-warning" class="desktop-warning">
-    <div class="warning-content">
-      <h2>Mobile Access Required</h2>
-      <p>This staking platform is only accessible from mobile devices (Android/iOS). Please visit from your smartphone to continue.</p>
+  <div class="container">
+    <!-- Desktop Warning -->
+    <div id="desktop-warning" class="warning-box">
+      <h2>Mobile Device Required</h2>
+      <p>This staking platform is only available on mobile devices. Please access from your smartphone or tablet.</p>
     </div>
-  </div>
 
-  <!-- Main App Content (Hidden on desktop) -->
-  <div id="app-content">
-    <header class="navbar">
-      <div class="logo-container">
-        <img src="logo.png" alt="VNST Logo" class="logo">
+    <!-- App Content -->
+    <div id="app-content" class="app-container">
+      <!-- Header -->
+      <header class="app-header">
         <h1>VNST Staking</h1>
-      </div>
-      <button id="connect-wallet" class="connect-btn">Connect Wallet</button>
-    </header>
+        <button id="connect-wallet" class="connect-btn">Connect Wallet</button>
+      </header>
 
-    <main>
-      <section class="staking-section">
-        <div class="card">
-          <h2>Your Staking Details</h2>
-          <div class="staking-info">
-            <div class="info-item">
-              <span>Total Staked:</span>
-              <span id="total-staked">0 VNST</span>
-            </div>
-            <div class="info-item">
-              <span>Pending Rewards:</span>
-              <span id="pending-rewards">0 VNT + 0 USDT</span>
-            </div>
-            <div class="info-item">
-              <span>Claimable In:</span>
-              <span id="claim-time">0h 0m</span>
-            </div>
+      <!-- Stats Overview -->
+      <section class="stats-section">
+        <div class="stat-card">
+          <h3>Total Value Locked</h3>
+          <p id="tvl">0 VNST</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Users</h3>
+          <p id="total-users">0</p>
+        </div>
+      </section>
+
+      <!-- User Dashboard -->
+      <section class="dashboard">
+        <div class="user-stats">
+          <h2>Your Staking Stats</h2>
+          <div class="stat-row">
+            <span>Total Staked:</span>
+            <span id="total-staked">0 VNST</span>
+          </div>
+          <div class="stat-row">
+            <span>Pending Rewards:</span>
+            <span id="pending-rewards">0 VNT + 0 USDT</span>
+          </div>
+          <div class="stat-row">
+            <span>Direct Members:</span>
+            <span id="direct-members">0</span>
           </div>
         </div>
 
-        <div class="card">
+        <!-- Staking Form -->
+        <div class="staking-form">
           <h2>Stake VNST</h2>
           <div class="form-group">
             <label for="stake-amount">Amount (100-10,000 VNST)</label>
-            <input type="number" id="stake-amount" min="100" max="10000" placeholder="Enter VNST amount">
+            <input type="number" id="stake-amount" min="100" max="10000" placeholder="Enter amount">
           </div>
           <div class="form-group">
             <label for="referrer">Referrer Address</label>
             <input type="text" id="referrer" placeholder="Enter referrer wallet address">
           </div>
-          <button id="stake-btn" class="btn">Stake VNST</button>
-        </div>
-
-        <div class="card">
-          <h2>Claim Rewards</h2>
-          <p>Claim your VNT and USDT rewards daily</p>
-          <button id="claim-btn" class="btn" disabled>Claim Rewards</button>
+          <button id="stake-btn" class="action-btn" disabled>Stake</button>
+          <button id="claim-btn" class="action-btn secondary" disabled>Claim Rewards</button>
         </div>
       </section>
 
-      <section class="stats-section">
-        <h2>Platform Statistics</h2>
+      <!-- Referral Structure -->
+      <section class="referral-section">
+        <h2>Your Referral Structure</h2>
+        <div class="referral-grid">
+          <div class="referral-card">
+            <h3>Level Requirements</h3>
+            <div id="level-requirements"></div>
+          </div>
+          <div class="referral-card">
+            <h3>Your Network</h3>
+            <div id="referral-structure"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Downline Stats -->
+      <section class="downline-section">
+        <h2>Your Downline Performance</h2>
         <div class="stats-grid">
           <div class="stat-card">
-            <h3>Total Value Locked</h3>
-            <p id="tvl">0 VNST</p>
+            <h3>Active Stakes</h3>
+            <p id="active-stakes">0</p>
           </div>
           <div class="stat-card">
-            <h3>Total Users</h3>
-            <p id="total-users">0</p>
-          </div>
-          <div class="stat-card">
-            <h3>APY</h3>
-            <p id="apy">200%</p>
+            <h3>Inactive Stakes</h3>
+            <p id="inactive-stakes">0</p>
           </div>
         </div>
+        <div class="detailed-stats" id="downline-stats"></div>
       </section>
-    </main>
 
-    <footer>
-      <p>© 2025 VNST Staking Platform. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#">Terms</a>
-        <a href="#">Privacy</a>
-        <a href="#">Contact</a>
-      </div>
-    </footer>
-  </div>
+      <!-- System Info -->
+      <section class="system-section">
+        <h2>System Statistics</h2>
+        <div class="detailed-stats" id="system-stats"></div>
+      </section>
+    </div>
 
-  <!-- Wallet Connection Modal -->
-  <div id="wallet-modal" class="wallet-modal">
-    <div class="modal-content">
-      <h3>Connect Wallet</h3>
-      <p>Choose your wallet provider to connect</p>
-      
-      <div class="wallet-buttons">
-        <button id="metamask-btn">
-          <img src="metamask-icon.png" alt="MetaMask">
-          <span>MetaMask</span>
-        </button>
-        <button id="walletconnect-btn">
-          <img src="walletconnect-icon.png" alt="WalletConnect">
-          <span>WalletConnect</span>
-        </button>
+    <!-- Wallet Connection Modal -->
+    <div id="wallet-modal" class="modal">
+      <div class="modal-content">
+        <h3>Connect Wallet</h3>
+        <p>Choose your wallet provider to connect</p>
+        
+        <div class="wallet-buttons">
+          <button id="metamask-btn">
+            <img src="images/metamask.png" alt="MetaMask">
+            <span>MetaMask</span>
+          </button>
+          <button id="walletconnect-btn">
+            <img src="images/walletconnect.png" alt="WalletConnect">
+            <span>WalletConnect</span>
+          </button>
+        </div>
+        
+        <div class="or-text">OR</div>
+        
+        <div class="manual-connect">
+          <input type="text" id="manual-address" placeholder="Enter wallet address">
+          <button id="manual-connect" class="connect-btn">Connect</button>
+        </div>
       </div>
-      
-      <div class="or-text">OR</div>
-      
-      <div class="form-group">
-        <label for="manual-address">Enter Wallet Address</label>
-        <input type="text" id="manual-address" placeholder="0x...">
+    </div>
+
+    <!-- Device Verification Modal -->
+    <div id="device-modal" class="modal">
+      <div class="modal-content">
+        <h3>Device Verification</h3>
+        <p>This device ID will be associated with your staking account</p>
+        
+        <div class="device-id-container">
+          <input type="text" id="device-id" readonly>
+          <button id="copy-device-id">Copy Device ID</button>
+        </div>
+        
+        <p class="notice">Note: Only one active stake per device is allowed</p>
       </div>
-      <button id="manual-connect" class="btn">Connect</button>
     </div>
   </div>
-
-  <!-- Device ID Verification Modal -->
-  <div id="device-modal" class="wallet-modal">
-    <div class="modal-content">
-      <h3>Device Verification</h3>
-      <p>Please verify your device to continue</p>
-      
-      <div class="form-group">
-        <label for="device-id">Device ID</label>
-        <input type="text" id="device-id" readonly>
-      </div>
-      
-      <button id="copy-device-id" class="btn">Copy Device ID</button>
-      <p class="small-text">This ID ensures only one account per device</p>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
