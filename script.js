@@ -8,23 +8,8 @@ const CONTRACT_ADDRESS = "0xC0a8496a9ef2aE23D56F886a3205bb4822a497d1";
 const TOKEN_ADDRESSES = {
   VNST: "0x5C6cB004b50278c6726c3cBEDd25165c2072C46D",
   VNT: "0xa7e41CB0A41dbFC801408d3B577fCed150c4eeEc",
-  USDT: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+  USDT: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"
 };
-
-// Device and Mobile Check
-function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-// Generate or retrieve device ID
-function getDeviceId() {
-  let deviceId = localStorage.getItem('vnst_device_id');
-  if (!deviceId) {
-    deviceId = 'vnst-' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('vnst_device_id', deviceId);
-  }
-  return deviceId;
-}
 
 // DOM Elements
 const desktopWarning = document.getElementById('desktop-warning');
@@ -32,43 +17,32 @@ const appContent = document.getElementById('app-content');
 const connectWalletBtn = document.getElementById('connect-wallet');
 const walletModal = document.getElementById('wallet-modal');
 const deviceModal = document.getElementById('device-modal');
+const closeModal = document.querySelector('.close-modal');
 const deviceIdInput = document.getElementById('device-id');
 const copyDeviceIdBtn = document.getElementById('copy-device-id');
 const stakeAmountInput = document.getElementById('stake-amount');
 const referrerInput = document.getElementById('referrer');
 const stakeBtn = document.getElementById('stake-btn');
 const claimBtn = document.getElementById('claim-btn');
-const totalStakedDisplay = document.getElementById('total-staked');
-const pendingRewardsDisplay = document.getElementById('pending-rewards');
-const claimTimeDisplay = document.getElementById('claim-time');
 const tvlDisplay = document.getElementById('tvl');
 const totalUsersDisplay = document.getElementById('total-users');
+const totalStakedDisplay = document.getElementById('total-staked');
+const pendingRewardsDisplay = document.getElementById('pending-rewards');
 const directMembersDisplay = document.getElementById('direct-members');
-const levelRequirementsDisplay = document.getElementById('level-requirements');
-const referralStructureDisplay = document.getElementById('referral-structure');
-const activeStakesDisplay = document.getElementById('active-stakes');
-const inactiveStakesDisplay = document.getElementById('inactive-stakes');
-const downlineStatsDisplay = document.getElementById('downline-stats');
-const systemStatsDisplay = document.getElementById('system-stats');
 
 // Web3 and Contract Instance
 let web3;
 let stakingContract;
 let userAddress;
 
-// Check device type and show appropriate content
-if (isMobileDevice()) {
-  appContent.style.display = 'flex';
-  desktopWarning.style.display = 'none';
-  
-  // Show device verification modal
-  setTimeout(() => {
-    deviceIdInput.value = getDeviceId();
-    deviceModal.style.display = 'flex';
-  }, 1000);
-} else {
-  appContent.style.display = 'none';
-  desktopWarning.style.display = 'flex';
+// Device Management
+function getDeviceId() {
+  let deviceId = localStorage.getItem('vnst_device_id');
+  if (!deviceId) {
+    deviceId = 'vnst-' + Math.random().toString(36).substr(2, 12);
+    localStorage.setItem('vnst_device_id', deviceId);
+  }
+  return deviceId;
 }
 
 // Initialize Web3
@@ -77,7 +51,6 @@ async function initWeb3() {
     try {
       web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
-      stakingContract = new web3.eth.Contract(VNST_STAKING_ABI, CONTRACT_ADDRESS);
       return true;
     } catch (error) {
       console.error("User denied account access");
@@ -85,7 +58,6 @@ async function initWeb3() {
     }
   } else if (window.web3) {
     web3 = new Web3(window.web3.currentProvider);
-    stakingContract = new web3.eth.Contract(VNST_STAKING_ABI, CONTRACT_ADDRESS);
     return true;
   } else {
     alert('Please install MetaMask or another Web3 provider!');
@@ -93,112 +65,73 @@ async function initWeb3() {
   }
 }
 
-// Copy Device ID
-copyDeviceIdBtn.addEventListener('click', () => {
-  deviceIdInput.select();
-  document.execCommand('copy');
-  copyDeviceIdBtn.textContent = 'Copied!';
-  setTimeout(() => {
-    copyDeviceIdBtn.textContent = 'Copy Device ID';
-    deviceModal.style.display = 'none';
-  }, 1500);
-});
-
-// Wallet Connection
-connectWalletBtn.addEventListener('click', () => {
-  walletModal.style.display = 'flex';
-});
-
-// Close modals when clicking outside
-[walletModal, deviceModal].forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  });
-});
-
-// Wallet Connection Handlers
-document.getElementById('metamask-btn').addEventListener('click', async () => {
-  if (await initWeb3()) {
-    const accounts = await web3.eth.getAccounts();
-    userAddress = accounts[0];
-    connectWallet('MetaMask', userAddress);
-    loadContractData();
-  }
-});
-
-document.getElementById('walletconnect-btn').addEventListener('click', async () => {
-  // WalletConnect integration would go here
-  alert('WalletConnect integration would be implemented here');
-});
-
-document.getElementById('manual-connect').addEventListener('click', () => {
-  const address = document.getElementById('manual-address').value;
-  if (address && address.length === 42 && address.startsWith('0x')) {
-    userAddress = address;
-    connectWallet('Manual', address);
-    loadContractData();
-  } else {
-    alert('Please enter a valid wallet address');
-  }
-});
-
-function connectWallet(provider, address = null) {
-  const walletAddress = address || `0x${Math.random().toString(16).substr(2, 40)}`;
-  
-  connectWalletBtn.textContent = `${provider} Connected`;
-  connectWalletBtn.style.backgroundColor = '#4CAF50';
-  walletModal.style.display = 'none';
-  
-  // Enable staking functionality
-  stakeBtn.disabled = false;
+// Initialize Contract
+function initContract() {
+  stakingContract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 }
 
-// Load contract data
-async function loadContractData() {
-  if (!stakingContract || !userAddress) return;
+// Connect Wallet
+async function connectWallet(provider, address = null) {
+  if (address) {
+    userAddress = address;
+  } else {
+    const accounts = await web3.eth.getAccounts();
+    userAddress = accounts[0];
+  }
+  
+  connectWalletBtn.innerHTML = `<i class="fas fa-check-circle"></i> ${provider} Connected`;
+  connectWalletBtn.classList.remove('pulse');
+  connectWalletBtn.style.background = 'var(--success)';
+  walletModal.style.display = 'none';
+  
+  // Initialize contract
+  initContract();
+  
+  // Load user data
+  loadUserData();
+}
 
+// Load User Data
+async function loadUserData() {
   try {
     // Get user stake info
     const stakeInfo = await stakingContract.methods.stakes(userAddress).call();
     
     // Get pending rewards
-    const [vntReward, usdtReward] = await stakingContract.methods.getPendingRewards(userAddress).call();
+    const rewards = await stakingContract.methods.getPendingRewards(userAddress).call();
     
     // Get user stats
     const userStats = await stakingContract.methods.getUserStats(userAddress).call();
     
     // Get system stats
-    const walletBalances = await stakingContract.methods.getWalletBalances().call();
+    const tvl = await stakingContract.methods.getTVL().call();
     const totalUsers = await stakingContract.methods.totalUsers().call();
     
     // Update UI
     updateUI({
       stakeInfo,
-      rewards: { vntReward, usdtReward },
+      rewards,
       userStats,
-      systemStats: {
-        tvl: walletBalances.vnstStakingBalance,
-        totalUsers
-      }
+      systemStats: { tvl, totalUsers }
     });
     
-    // Load referral data
-    loadReferralData(userAddress);
-    
   } catch (error) {
-    console.error("Error loading contract data:", error);
+    console.error("Error loading user data:", error);
   }
 }
 
-// Update UI with contract data
+// Update UI
 function updateUI(data) {
   const { stakeInfo, rewards, userStats, systemStats } = data;
   
+  // Format values
+  const formatValue = (value, decimals = 2) => {
+    return parseFloat(web3.utils.fromWei(value, 'ether')).toFixed(decimals);
+  };
+  
   // Stake info
   if (stakeInfo.active) {
-    totalStakedDisplay.textContent = `${web3.utils.fromWei(stakeInfo.amount, 'ether')} VNST`;
+    totalStakedDisplay.textContent = `${formatValue(stakeInfo.amount)} VNST`;
     stakeAmountInput.disabled = true;
     stakeBtn.disabled = true;
   } else {
@@ -208,115 +141,49 @@ function updateUI(data) {
   }
   
   // Rewards
-  pendingRewardsDisplay.textContent = `${web3.utils.fromWei(rewards.vntReward, 'ether')} VNT + ${web3.utils.fromWei(rewards.usdtReward, 'ether')} USDT`;
+  pendingRewardsDisplay.textContent = `${formatValue(rewards[0])} VNT + ${formatValue(rewards[1])} USDT`;
   
   // User stats
-  directMembersDisplay.textContent = userStats.directMembers;
+  directMembersDisplay.textContent = userStats.totalDirectMembers || '0';
   
   // System stats
-  tvlDisplay.textContent = `${web3.utils.fromWei(systemStats.tvl, 'ether')} VNST`;
-  totalUsersDisplay.textContent = systemStats.totalUsers;
+  tvlDisplay.textContent = `${formatValue(systemStats.tvl)} VNST`;
+  totalUsersDisplay.textContent = systemStats.totalUsers || '0';
   
   // Enable claim button if rewards meet minimum
-  if (parseFloat(web3.utils.fromWei(rewards.vntReward, 'ether')) >= 10) {
+  if (parseFloat(formatValue(rewards[0])) >= 10) {
     claimBtn.disabled = false;
+    claimBtn.classList.add('pulse');
   } else {
     claimBtn.disabled = true;
+    claimBtn.classList.remove('pulse');
   }
 }
 
-// Load referral data
-async function loadReferralData(userAddress) {
-  try {
-    // Get referral counts
-    const referralCount = await stakingContract.methods.getReferralCount(userAddress).call();
-    
-    // Get level requirements
-    const levelRequirements = await stakingContract.methods.requiredDirectMembers().call();
-    
-    // Update UI
-    referralStructureDisplay.innerHTML = '';
-    levelRequirementsDisplay.innerHTML = '';
-    
-    // Display referral structure
-    for (let i = 0; i < 5; i++) {
-      const levelCount = await stakingContract.methods.getLevelReferralCount(userAddress, i).call();
-      referralStructureDisplay.innerHTML += `<p>Level ${i+1}: ${levelCount} members</p>`;
-      
-      levelRequirementsDisplay.innerHTML += `<p>Level ${i+1}: Need ${levelRequirements[i]} direct members</p>`;
-    }
-    
-    // Load downline stats
-    loadDownlineStats(userAddress);
-    
-  } catch (error) {
-    console.error("Error loading referral data:", error);
-  }
-}
-
-// Load downline stats
-async function loadDownlineStats(userAddress) {
-  try {
-    let activeCount = 0;
-    let inactiveCount = 0;
-    let totalDownlineStake = 0;
-    
-    // Get all referrals
-    const referrals = await stakingContract.methods.getReferrals(userAddress).call();
-    
-    // Check each referral
-    for (const referral of referrals) {
-      const stakeInfo = await stakingContract.methods.stakes(referral).call();
-      if (stakeInfo.active) {
-        activeCount++;
-        totalDownlineStake += parseFloat(web3.utils.fromWei(stakeInfo.amount, 'ether'));
-      } else {
-        inactiveCount++;
-      }
-    }
-    
-    // Update UI
-    activeStakesDisplay.textContent = activeCount;
-    inactiveStakesDisplay.textContent = inactiveCount;
-    downlineStatsDisplay.innerHTML = `
-      <p>Active Stakes: ${activeCount}</p>
-      <p>Inactive Stakes: ${inactiveCount}</p>
-      <p>Total Downline Stake: ${totalDownlineStake} VNST</p>
-    `;
-    
-  } catch (error) {
-    console.error("Error loading downline stats:", error);
-  }
-}
-
-// Stake Functionality
-stakeBtn.addEventListener('click', async () => {
-  const amount = parseFloat(stakeAmountInput.value);
+// Stake Function
+async function stakeTokens() {
+  const amount = stakeAmountInput.value;
   const referrer = referrerInput.value.trim();
   
-  if (isNaN(amount)) {
-    alert('Please enter a valid amount');
+  // Validate inputs
+  if (!amount || isNaN(amount) || amount < 100 || amount > 10000) {
+    alert('Please enter a valid amount between 100 and 10,000 VNST');
     return;
   }
   
-  if (amount < 100 || amount > 10000) {
-    alert('Stake amount must be between 100 and 10,000 VNST');
-    return;
-  }
-  
-  if (!referrer || referrer.length !== 42 || !referrer.startsWith('0x')) {
+  if (!referrer || !web3.utils.isAddress(referrer)) {
     alert('Please enter a valid referrer wallet address');
     return;
   }
   
   try {
-    const amountWei = web3.utils.toWei(amount.toString(), 'ether');
+    const amountWei = web3.utils.toWei(amount, 'ether');
     
-    // Approve token transfer first
-    const vnstToken = new web3.eth.Contract(IERC20_ABI, TOKEN_ADDRESSES.VNST);
+    // Approve token transfer
+    const vnstToken = new web3.eth.Contract(ERC20_ABI, TOKEN_ADDRESSES.VNST);
     await vnstToken.methods.approve(CONTRACT_ADDRESS, amountWei).send({ from: userAddress });
     
-    // Then stake
+    // Execute stake
     await stakingContract.methods.stake(amountWei, referrer).send({ from: userAddress });
     
     alert('Staking successful!');
@@ -324,51 +191,107 @@ stakeBtn.addEventListener('click', async () => {
     referrerInput.value = '';
     
     // Refresh data
-    loadContractData();
+    loadUserData();
     
   } catch (error) {
     console.error("Staking failed:", error);
-    alert('Staking failed: ' + error.message);
+    alert(`Staking failed: ${error.message}`);
   }
-});
+}
 
-// Claim Functionality
-claimBtn.addEventListener('click', async () => {
+// Claim Rewards
+async function claimRewards() {
   try {
     await stakingContract.methods.claimRewards().send({ from: userAddress });
     alert('Rewards claimed successfully!');
-    
-    // Refresh data
-    loadContractData();
-    
+    loadUserData();
   } catch (error) {
     console.error("Claim failed:", error);
-    alert('Claim failed: ' + error.message);
+    alert(`Claim failed: ${error.message}`);
+  }
+}
+
+// Event Listeners
+connectWalletBtn.addEventListener('click', () => {
+  walletModal.style.display = 'flex';
+});
+
+closeModal.addEventListener('click', () => {
+  walletModal.style.display = 'none';
+});
+
+document.getElementById('metamask-btn').addEventListener('click', async () => {
+  if (await initWeb3()) {
+    connectWallet('MetaMask');
   }
 });
 
-// Initialize when page loads
-window.addEventListener('load', async () => {
+document.getElementById('walletconnect-btn').addEventListener('click', () => {
+  alert('WalletConnect integration would be implemented here');
+});
+
+document.getElementById('manual-connect').addEventListener('click', () => {
+  const address = document.getElementById('manual-address').value;
+  if (web3.utils.isAddress(address)) {
+    connectWallet('Manual', address);
+  } else {
+    alert('Please enter a valid wallet address');
+  }
+});
+
+stakeBtn.addEventListener('click', stakeTokens);
+claimBtn.addEventListener('click', claimRewards);
+
+copyDeviceIdBtn.addEventListener('click', () => {
+  deviceIdInput.select();
+  document.execCommand('copy');
+  copyDeviceIdBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+  setTimeout(() => {
+    copyDeviceIdBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+    deviceModal.style.display = 'none';
+  }, 2000);
+});
+
+// Device Check
+function checkDevice() {
+  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    appContent.style.display = 'flex';
+    desktopWarning.style.display = 'none';
+    
+    // Show device verification
+    setTimeout(() => {
+      deviceIdInput.value = getDeviceId();
+      deviceModal.style.display = 'flex';
+    }, 1000);
+  } else {
+    appContent.style.display = 'none';
+    desktopWarning.style.display = 'flex';
+  }
+}
+
+// Initialize
+window.addEventListener('load', () => {
+  checkDevice();
+  
   // Check if wallet is already connected
   if (window.ethereum && window.ethereum.selectedAddress) {
-    userAddress = window.ethereum.selectedAddress;
-    if (await initWeb3()) {
-      connectWallet('MetaMask', userAddress);
-      loadContractData();
-    }
+    initWeb3().then(() => {
+      connectWallet('MetaMask');
+    });
   }
   
   // Listen for account changes
   if (window.ethereum) {
     window.ethereum.on('accountsChanged', (accounts) => {
       if (accounts.length === 0) {
-        // User disconnected wallet
-        connectWalletBtn.textContent = 'Connect Wallet';
-        connectWalletBtn.style.backgroundColor = '';
+        // Disconnected
+        connectWalletBtn.innerHTML = '<i class="fas fa-wallet"></i> Connect Wallet';
+        connectWalletBtn.style.background = 'linear-gradient(135deg, var(--secondary), var(--accent))';
+        connectWalletBtn.classList.add('pulse');
       } else {
         // Account changed
         userAddress = accounts[0];
-        loadContractData();
+        loadUserData();
       }
     });
   }
