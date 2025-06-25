@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VNST Staking - Team</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="VNST Logo" class="logo">
+      <span>VNST Staking</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="staking.html"><i class="fas fa-coins"></i> Staking</a>
+      <a href="team.html" class="active"><i class="fas fa-users"></i> Team</a>
+      <button id="connect-wallet" class="connect-btn">
+        <i class="fas fa-wallet"></i>
+        <span>Connect Wallet</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+    <section class="team-overview">
+      <h2 class="section-title"><i class="fas fa-network-wired"></i> Your Team Structure</h2>
+      
+      <div class="team-stats">
+        <div class="stat-card glow">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Total Team</h3>
+            <p id="total-team">0 Members</p>
+          </div>
+        </div>
+        
+        <div class="stat-card glow">
+          <div class="stat-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Team Staked</h3>
+            <p id="team-staked">0 VNST</p>
+          </div>
+        </div>
+        
+        <div class="stat-card glow">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Active Stakes</h3>
+            <p id="team-active">0</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="level-structure">
+      <h2 class="section-title"><i class="fas fa-sitemap"></i> Level Structure</h2>
+      
+      <div class="levels-grid">
+        <!-- Level 1 -->
+        <div class="level-card" id="level-1">
+          <div class="level-header">
+            <h3><i class="fas fa-level-up-alt"></i> Level 1</h3>
+            <span class="status-badge unlocked"><i class="fas fa-unlock"></i> Unlocked</span>
+          </div>
+          <div class="level-body">
+            <p><i class="fas fa-users"></i> Members: <span id="level1-members">0</span></p>
+            <p><i class="fas fa-coins"></i> Staked: <span id="level1-staked">0 VNST</span></p>
+            <p><i class="fas fa-check"></i> Active: <span id="level1-active">0</span></p>
+            <p><i class="fas fa-percentage"></i> Reward: 5%</p>
+          </div>
+        </div>
+        
+        <!-- Level 2 -->
+        <div class="level-card" id="level-2">
+          <div class="level-header">
+            <h3><i class="fas fa-level-up-alt"></i> Level 2</h3>
+            <span class="status-badge locked"><i class="fas fa-lock"></i> Locked</span>
+          </div>
+          <div class="level-body">
+            <p><i class="fas fa-users"></i> Members: <span id="level2-members">0</span></p>
+            <p><i class="fas fa-coins"></i> Staked: <span id="level2-staked">0 VNST</span></p>
+            <p><i class="fas fa-check"></i> Active: <span id="level2-active">0</span></p>
+            <p><i class="fas fa-percentage"></i> Reward: 3%</p>
+            <p class="requirement"><i class="fas fa-tasks"></i> Need 2 direct members</p>
+          </div>
+        </div>
+        
+        <!-- Level 3 -->
+        <div class="level-card" id="level-3">
+          <div class="level-header">
+            <h3><i class="fas fa-level-up-alt"></i> Level 3</h3>
+            <span class="status-badge locked"><i class="fas fa-lock"></i> Locked</span>
+          </div>
+          <div class="level-body">
+            <p><i class="fas fa-users"></i> Members: <span id="level3-members">0</span></p>
+            <p><i class="fas fa-coins"></i> Staked: <span id="level3-staked">0 VNST</span></p>
+            <p><i class="fas fa-check"></i> Active: <span id="level3-active">0</span></p>
+            <p><i class="fas fa-percentage"></i> Reward: 2%</p>
+            <p class="requirement"><i class="fas fa-tasks"></i> Need 2 direct members</p>
+          </div>
+        </div>
+        
+        <!-- Level 4 -->
+        <div class="level-card" id="level-4">
+          <div class="level-header">
+            <h3><i class="fas fa-level-up-alt"></i> Level 4</h3>
+            <span class="status-badge locked"><i class="fas fa-lock"></i> Locked</span>
+          </div>
+          <div class="level-body">
+            <p><i class="fas fa-users"></i> Members: <span id="level4-members">0</span></p>
+            <p><i class="fas fa-coins"></i> Staked: <span id="level4-staked">0 VNST</span></p>
+            <p><i class="fas fa-check"></i> Active: <span id="level4-active">0</span></p>
+            <p><i class="fas fa-percentage"></i> Reward: 1%</p>
+            <p class="requirement"><i class="fas fa-tasks"></i> Need 2 direct members</p>
+          </div>
+        </div>
+        
+        <!-- Level 5 -->
+        <div class="level-card" id="level-5">
+          <div class="level-header">
+            <h3><i class="fas fa-level-up-alt"></i> Level 5</h3>
+            <span class="status-badge locked"><i class="fas fa-lock"></i> Locked</span>
+          </div>
+          <div class="level-body">
+            <p><i class="fas fa-users"></i> Members: <span id="level5-members">0</span></p>
+            <p><i class="fas fa-coins"></i> Staked: <span id="level5-staked">0 VNST</span></p>
+            <p><i class="fas fa-check"></i> Active: <span id="level5-active">0</span></p>
+            <p><i class="fas fa-percentage"></i> Reward: 1%</p>
+            <p class="requirement"><i class="fas fa-tasks"></i> Need 2 direct members</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team-tree">
+      <h2 class="section-title"><i class="fas fa-tree"></i> Team Tree</h2>
+      
+      <div class="tree-container">
+        <div class="tree-node root">
+          <div class="node-user">
+            <i class="fas fa-user"></i>
+            <span>You</span>
+          </div>
+          <div class="node-stats">
+            <span><i class="fas fa-coins"></i> <span id="user-stake">0 VNST</span></span>
+            <span><i class="fas fa-check"></i> <span id="user-status">Active</span></span>
+          </div>
+        </div>
+        
+        <div class="tree-branches">
+          <!-- Level 1 -->
+          <div class="tree-level">
+            <h4>Level 1 (<span id="level1-count">0</span> members)</h4>
+            <div class="level-members" id="level1-members-list">
+              <!-- Members will be added dynamically -->
+              <div class="empty-message">No members yet</div>
+            </div>
+          </div>
+          
+          <!-- Level 2 -->
+          <div class="tree-level">
+            <h4>Level 2 (<span id="level2-count">0</span> members)</h4>
+            <div class="level-members" id="level2-members-list">
+              <div class="empty-message">Unlock Level 2</div>
+            </div>
+          </div>
+          
+          <!-- Level 3 -->
+          <div class="tree-level">
+            <h4>Level 3 (<span id="level3-count">0</span> members)</h4>
+            <div class="level-members" id="level3-members-list">
+              <div class="empty-message">Unlock Level 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Wallet Connection Modal -->
+  <div id="wallet-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2><i class="fas fa-wallet"></i> Connect Wallet</h2>
+      
+      <div class="wallet-options">
+        <button id="metamask-btn" class="wallet-btn">
+          <img src="images/metamask.png" alt="MetaMask">
+          <span>MetaMask</span>
+        </button>
+        
+        <button id="walletconnect-btn" class="wallet-btn">
+          <img src="images/walletconnect.png" alt="WalletConnect">
+          <span>Any Wallet</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
